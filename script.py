@@ -4,16 +4,16 @@ Created on Oct 11, 2017
 @author: ahmed
 '''
 import requests, openpyxl
-from tickers import tickers
+import config
 
 def roundRating(num):
     return round(num * 2) / 2
 
-wb = openpyxl.load_workbook("C:\\Users\\ahmed\\Desktop\\Book1.xlsx")
+wb = openpyxl.load_workbook(config.saveLocation)
 ws = wb.active
 
 x = 3
-for sym in tickers:
+for sym in config.tickers:
     print("Downloading info for " + sym + "...")
     r = requests.get("https://query2.finance.yahoo.com/v7/finance/options/" + sym + "?")
     r.raise_for_status()
@@ -22,7 +22,7 @@ for sym in tickers:
     print("Oki...")
 
 
-    print("Populating excel sheet...")
+    print("Populating excel sheet...\n")
     ws["A" + str(x)] = jSon["underlyingSymbol"]
     ws["B" + str(x)] = jSon["quote"]["regularMarketPrice"]
 
@@ -43,5 +43,5 @@ for sym in tickers:
 
 
     x += 10
-wb.save("C:\\Users\\ahmed\\Desktop\\Book1.xlsx")
+wb.save(config.saveLocation)
 print("Done...")
